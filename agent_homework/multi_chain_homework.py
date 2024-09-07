@@ -15,7 +15,7 @@ java_chain = (
         ChatPromptTemplate.from_template(
             "请用java 语言实现下面的功能需求，给出示例代码: \n 需求: {query}"
         )
-        | ChatOpenAI(openai_api_base="https://ai-yyds.com/v1", model="claude-3-5-sonnet-20240620")
+        | ChatOpenAI(openai_api_base="https://ai-yyds.com/v1", model="gpt-4o-mini")
         | StrOutputParser()
 )
 
@@ -23,7 +23,7 @@ python_chain = (
         ChatPromptTemplate.from_template(
             "请用python 语言实现下面的功能需求，给出示例代码: \n 需求: {query}"
         )
-        | ChatOpenAI(openai_api_base="https://ai-yyds.com/v1", model="claude-3-5-sonnet-20240620")
+        | ChatOpenAI(openai_api_base="https://ai-yyds.com/v1", model="gpt-4o-mini")
         | StrOutputParser()
 )
 
