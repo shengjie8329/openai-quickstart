@@ -28,15 +28,15 @@ os.environ["LANGCHAIN_PROJECT"] = "Multi-agent Collaboration"
 
 
 # 使用 OpenAI 模型
-research_llm = ChatOpenAI(openai_api_base="https://ai-yyds.com/v1", model="gpt-4o-mini")
-chart_llm = ChatOpenAI(openai_api_base="https://ai-yyds.com/v1", model="gpt-4o-mini")
+research_llm = ChatOpenAI(openai_api_base="https://ai-yyds.com/v1", model="gpt-4o-mini", temperature=0.5)
+chart_llm = ChatOpenAI(openai_api_base="https://ai-yyds.com/v1", model="gpt-4o-mini", temperature=0.2)
 
 # 研究智能体及其节点
 research_agent = create_agent(
     research_llm,  # 使用 research_llm 作为研究智能体的语言模型
     [tavily_tool],  # 研究智能体使用 Tavily 搜索工具
-    system_message="Before using the search engine, carefully think through and clarify the query. "
-                   "Then, conduct a single search that addresses all aspects of the query in one go.",
+    system_message="你是一个帮助分析用户提问的专家，如果你能回答该问题就回答。如果无法回答也可借助与工具。 如果要使用搜索工具，在使用搜索工具之前，仔细思考并弄清楚要查询的是什么。"
+                   "然后，进行一次性的搜索，一次性找到所要查询问题的所有方面的答案。注意只需要找到对应的数据或者答案并将结果输出就可以，特别是不要自己生成代码,也不要输出FINAL ANSWER，这项工作会交由其他助手继续处理",
     # 系统消息，指导智能体如何使用搜索工具
 )
 # 使用 functools.partial 创建研究智能体的节点，指定该节点的名称为 "Researcher"
@@ -46,7 +46,7 @@ research_node = functools.partial(agent_node, agent=research_agent, name="Resear
 table_agent = create_agent(
     chart_llm,  # 使用 chart_llm 作为表格生成器智能体的语言模型
     [python_repl],  # 表格生成器智能体使用 Python REPL 工具
-    system_message="receive the code to generate clear and user-friendly table on the console based on the provided data.",  # 系统消息，指导智能体如何生成表格
+    system_message="根据用户需求以及其他助手得到的相应事实数据， 编写出相应的python代码用于在控制台上构造一个清晰直观的表格数据，并调用工具执行这些代码。",  # 系统消息，指导智能体如何生成表格 receive the code to generate clear and user-friendly table on the console based on the provided data.
 )
 # 使用 functools.partial 创建表格生成器智能体的节点，指定该节点的名称为 "table_generator"
 table_node = functools.partial(agent_node, agent=table_agent, name="table_generator")

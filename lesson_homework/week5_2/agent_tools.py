@@ -82,7 +82,7 @@ class AgentState(TypedDict):
 def agent_node(state, agent, name):
     # 调用智能体，获取结果
     result = agent.invoke(state)
-    # print("result---> " + str(result))
+    print("result---> " + str(result))
     # 将智能体的输出转换为适合追加到全局状态的格式
     if isinstance(result, ToolMessage):
         pass  # 如果是工具消息，跳过处理
